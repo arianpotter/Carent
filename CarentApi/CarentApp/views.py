@@ -16,3 +16,11 @@ class UserView(viewsets.ViewSet):
             return Response(serializer.data)
         else:
             return Response(status=401)
+
+
+
+class RentalCarView(viewsets.ViewSet):
+    pass
+
+class RentView(viewsets.ViewSet):
+    pass

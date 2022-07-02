@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from django.db import transaction
-from .models import User
+from .models import User,RentalCar,Rent
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,3 +22,19 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.last_name = self.data.get('last_name')
         user.save()
         return user
+
+
+class RentalCarSerializer(serializers.ModelSerializer):
+    owner = UserSerializer()
+    class Meta:
+        model = RentalCar
+        fields = '__all__'
+        depth = 1
+
+class RentSerializer(serializers.ModelSerializer):
+    car = RentalCarSerializer()
+    client = UserSerializer()
+    class Meta:
+        model = Rent
+        fields = '__all__'
+        depth = 1
