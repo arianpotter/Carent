@@ -21,6 +21,8 @@ from CarentApp import views
 
 router = routers.DefaultRouter()
 router.register(r'users/me', views.UserView,'User')
+router.register(r'rentalcars',views.RentalCarView,'RentalCar')
+router.register(r'rents',views.RentView,'Rent')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
