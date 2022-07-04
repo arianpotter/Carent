@@ -64,7 +64,7 @@ class RentalCarView(viewsets.ViewSet):
     @transaction.atomic
     def partial_update(self,request,pk=None):
         if(request.user == AnonymousUser()): return Response(status=401)
-        rentalCar = RentalCar.objects.filter(id__exact=pk).firtst()
+        rentalCar = RentalCar.objects.filter(id__exact=pk).first()
         if(rentalCar.owner != request.user): return Response(status=401)
         if(rentalCar == None): raise Http404
         params = request.data
@@ -92,4 +92,42 @@ class RentalCarView(viewsets.ViewSet):
 
 
 class RentView(viewsets.ViewSet):
-    pass
+
+    @action(detail=False)
+    def my(self,request):
+        if(request.user == AnonymousUser()): return Response(status=401)
+        if(request.query_params['owner'] == 1):
+            rentalcar = request.query_params['rentalcar']
+            rents = Rent.objects.filter(car__owner__exact = request.user).filter(car__id__exact=rentalcar)
+            serializer = RentSerializer(rents,many=True)
+            return Response(serializer.data)
+        else:
+            rents = Rent.objects.filter(client__exact=request.user)
+            serializer = RentSerializer(request,many=True)
+            return Response(serializer.data)
+    
+    @transaction.atomic
+    def create(self,request):
+        if(request.user == AnonymousUser()): return Response(status=401)
+        params = request.data
+        rent = Rent(car = RentalCar.objects.filter(id__exact=params['car']).first(),
+        client = request.user,
+        start_date = params['start_date'],
+        end_date = params['end_date'],
+        desc = params['desc']
+        )
+        rent.save()
+        return Response(status=201)
+
+    @transaction.atomic
+    def partial_update(self,request,pk=None):
+        if(request.user == AnonymousUser()): return Response(status=401)
+        rent = Rent.objects.filter(id__exact=pk).first()
+        if(rent == None): raise Http404
+        params = request.data
+        rent.status = params['status']
+        rent.desc = params['desc']
+        rent.save()
+        return Response(status=204)
+
+
