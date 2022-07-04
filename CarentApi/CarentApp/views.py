@@ -59,7 +59,7 @@ class RentalCarView(viewsets.ViewSet):
         return_location = params['return_location']
         )
         rentalCar.save()
-        return Response(status=201,body=rentalCar.id)
+        return Response(status=201)
     
     @transaction.atomic
     def partial_update(self,request,pk=None):
