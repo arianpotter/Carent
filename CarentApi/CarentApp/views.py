@@ -30,7 +30,7 @@ class RentalCarView(viewsets.ViewSet):
         serializer = RentalCarSerializer(rentalCars,many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['get'])
+    @action(detail=False)
     def my(self,request):
         if(request.user == AnonymousUser()): return Response(status=401)
         rentalCars = RentalCar.objects.filter(owner__exact=request.user)
