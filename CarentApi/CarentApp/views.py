@@ -134,6 +134,6 @@ class RentView(viewsets.ViewSet):
         rent.rent_status = params['status']
 
         rent.save()
-        return Response(status=201)
+        return Response(status=204)
 
 
