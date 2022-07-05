@@ -96,14 +96,16 @@ class RentView(viewsets.ViewSet):
     @action(detail=False)
     def my(self,request):
         if(request.user == AnonymousUser()): return Response(status=401)
-        if(request.query_params['owner'] == 1):
+        if(request.query_params['owner'] == '1'):
+
             rentalcar = request.query_params['rentalcar']
             rents = Rent.objects.filter(car__owner__exact = request.user).filter(car__id__exact=rentalcar)
             serializer = RentSerializer(rents,many=True)
             return Response(serializer.data)
         else:
+
             rents = Rent.objects.filter(client__exact=request.user)
-            serializer = RentSerializer(request,many=True)
+            serializer = RentSerializer(rents,many=True)
             return Response(serializer.data)
     
     @transaction.atomic
@@ -122,11 +124,15 @@ class RentView(viewsets.ViewSet):
     @transaction.atomic
     def partial_update(self,request,pk=None):
         if(request.user == AnonymousUser()): return Response(status=401)
+
         rent = Rent.objects.filter(id__exact=pk).first()
         if(rent == None): raise Http404
         params = request.data
-        rent.status = params['status']
-        rent.desc = params['desc']
+        
+        
+
+        rent.rent_status = params['status']
+
         rent.save()
         return Response(status=204)
 
