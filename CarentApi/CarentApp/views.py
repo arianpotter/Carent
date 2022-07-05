@@ -125,7 +125,7 @@ class RentView(viewsets.ViewSet):
         rent = Rent.objects.filter(id__exact=pk).first()
         if(rent == None): raise Http404
         params = request.data
-        rent.status = params['status']
+        rent.rent_status = params['status']
         rent.desc = ""
         rent.save()
         return Response(status=204)
