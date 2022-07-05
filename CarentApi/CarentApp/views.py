@@ -114,7 +114,7 @@ class RentView(viewsets.ViewSet):
         client = request.user,
         start_date = params['start_date'],
         end_date = params['end_date'],
-        desc = params['desc']
+        desc = ""
         )
         rent.save()
         return Response(status=201)
@@ -126,7 +126,7 @@ class RentView(viewsets.ViewSet):
         if(rent == None): raise Http404
         params = request.data
         rent.status = params['status']
-        rent.desc = params['desc']
+        rent.desc = ""
         rent.save()
         return Response(status=204)
 
