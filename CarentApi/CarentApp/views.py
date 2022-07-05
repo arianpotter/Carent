@@ -96,14 +96,14 @@ class RentView(viewsets.ViewSet):
     @action(detail=False)
     def my(self,request):
         if(request.user == AnonymousUser()): return Response(status=401)
-        if(request.query_params['owner'] == 1):
-            rentalcar = request.query_params['rentalcar']
+        if(request.query_params['owner'] == '1'):
+            rentalcar = request.query_params.getlist('rentalcar')[0]
             rents = Rent.objects.filter(car__owner__exact = request.user).filter(car__id__exact=rentalcar)
             serializer = RentSerializer(rents,many=True)
             return Response(serializer.data)
         else:
             rents = Rent.objects.filter(client__exact=request.user)
-            serializer = RentSerializer(request,many=True)
+            serializer = RentSerializer(rents,many=True)
             return Response(serializer.data)
     
     @transaction.atomic
